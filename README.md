@@ -412,12 +412,14 @@ The model's performance will be reported honestly using appropriate evaluation m
 
 TwinPulse was developed for the **Digital Twin Challenge 2026 by Happiest Health**.
 
-Team Member and Institution 
+### Team Members and Institutions
 
-Almas Banu - Sri Venkateshwara College of Engineering (SVCE), Bengaluru 
-Ansu Kumar - GITAM Deemed to be University, Bengaluru 
+1. Almas Banu - Sri Venkateshwara College of Engineering (SVCE), Bengaluru
 
-**Repository:** [AlmasBanu1/TwinPulse](https://github.com/AlmasBanu1/TwinPulse)
+2. Ansu Kumar - GITAM Deemed to be University, Bengaluru
+
+** Repository:** [AlmasBanu1/TwinPulse](https://github.com/AlmasBanu1/TwinPulse)
+
 
 ---
 
