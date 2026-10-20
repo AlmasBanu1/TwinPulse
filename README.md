@@ -350,8 +350,9 @@ Raw SHAREE dataset files are not committed to the repository. The `docs/presenta
 | Explainability | Logistic Regression coefficients can be investigated | Further work required |
 | Public GitHub repository | TwinPulse repository | Available |
 | Architecture documentation | `docs/architecture/ARCHITECTURE.md` | Available |
-| Competition presentation | `docs/presentation/` | Pending |
-| Demonstration video | `docs/video/` | Pending |
+| Competition presentation | `docs/presentation/TwinPulse_Digital_Twin_Challenge_2026_By_Happiest_Health.pptx` | Available |
+| Demonstration video | `docs/video/TwinPulse.mp4` | Available |
+| Architecture pdf | `docs/architecture/TwinPulse_Architecture_Diagram.pdf` | Available |
 
 The current implementation demonstrates the software workflow, not a clinically validated cardiovascular risk prediction system. Real ECG replay, deployed HRV fusion, external validation, and clinical validation remain incomplete.
 
@@ -407,11 +408,26 @@ The model's performance will be reported honestly using appropriate evaluation m
 
 ## Team
 
-**Team:** TwinPulse
+**Team Name:** TwinPulse
 
-**Institution:** SVCE, Bengaluru
+TwinPulse was developed for the **Digital Twin Challenge 2026 by Happiest Health**.
 
-Team member details and competition-specific information will be added to the project documentation as required.
+Team Member and Institution 
+
+Almas Banu - Sri Venkateshwara College of Engineering (SVCE), Bengaluru 
+Ansu Kumar - GITAM Deemed to be University, Bengaluru 
+
+**Repository:** [AlmasBanu1/TwinPulse](https://github.com/AlmasBanu1/TwinPulse)
+
+---
+
+## Competition Deliverables
+
+- Architecture Diagram: [TwinPulse Architecture PDF](docs/architecture/TwinPulse_Architecture_Diagram.pdf)
+
+- Project Presentation: [TwinPulse Presentation](docs/presentation/TwinPulse_Digital_Twin_Challenge_2026_By_Happiest_Health.pptx)
+
+- Demonstration Video: [TwinPulse Demo Video](docs/video/TwinPulse.mp4)
 
 ---
 
