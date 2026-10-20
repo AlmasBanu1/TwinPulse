@@ -429,7 +429,7 @@ TwinPulse was developed for the **Digital Twin Challenge 2026 by Happiest Health
 
 - Project Presentation: [TwinPulse Presentation](docs/presentation/TwinPulse_Digital_Twin_Challenge_2026_By_Happiest_Health.pptx)
 
-- Demonstration Video: [TwinPulse Demo Video](docs/video/TwinPulse.mp4)
+- Demonstration Video: https://drive.google.com/file/d/19Lr3cA2bog7CS9aQbIdosBuhCoh-k9ho/view?usp=sharing
 
 ---
 
