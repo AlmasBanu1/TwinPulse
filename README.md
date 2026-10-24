@@ -2,75 +2,101 @@
 
 ## Dynamic Digital Twin for Cardiovascular Event Risk Prediction in Hypertensive Patients
 
-TwinPulse is a research-oriented proof-of-concept developed for the **Digital Twin Challenge 2026 by Happiest Health**.
+**TwinPulse** is a research-oriented proof-of-concept developed for the **Digital Twin Challenge 2026 by Happiest Health**. It explores how historical clinical information and simulated physiological observations can be represented in a software-based Digital Twin, alongside an experimental machine-learning workflow for cardiovascular and cerebrovascular event classification.
 
-The project explores how a Digital Twin can combine historical clinical information with a replayed physiological data stream to represent a hypertensive patient's current health state and estimate the risk of a major cardiovascular or cerebrovascular event over a defined prediction horizon.
-
-> **Note:** TwinPulse is an educational/research proof-of-concept and is not a clinically validated diagnostic or treatment system.
+> **Research disclaimer:** TwinPulse is an educational/research proof-of-concept. It is not clinically validated and must not be used for medical diagnosis, treatment decisions, or individual clinical risk assessment.
 
 ---
 
-## Problem Statement
+## 1. Team and Institution Details
 
-Hypertension is a major risk factor for cardiovascular and cerebrovascular disease. Traditional risk assessment often relies on static clinical measurements and historical patient information.
+**Team name:** TwinPulse
 
-TwinPulse explores a more dynamic approach:
+**Team members**
 
-- Maintain a virtual representation of a patient.
-- Combine historical clinical information with physiological time-series data.
-- Extract meaningful physiological features from the data stream.
-- Estimate future cardiovascular/cerebrovascular event risk using machine learning.
-- Continuously update the Digital Twin state as new physiological observations are replayed.
-- Present the patient's state and risk information through a doctor-facing dashboard.
+- **Almas Banu** — Sri Venkateshwara College of Engineering (SVCE), Bengaluru
+- **Ansu Kumar** — GITAM Deemed to be University, Bengaluru
+
+**Project repository:** [AlmasBanu1/TwinPulse](https://github.com/AlmasBanu1/TwinPulse)
+
+**Challenge:** Digital Twin Challenge 2026 by Happiest Health
 
 ---
 
-## Proposed Solution
+## 2. Project Title
 
-TwinPulse combines historical clinical information, a Digital Twin state engine, and exploratory machine-learning inference in a doctor-facing dashboard.
+**Dynamic Digital Twin for Cardiovascular Event Risk Prediction in Hypertensive Patients**
 
-The current proof-of-concept has five main components:
+---
 
-1. **Clinical data:** Patient demographic and clinical features supplied to the inference interface.
-2. **Physiological observations:** Simulated heart-rate and HRV observations used to update the Digital Twin state.
-3. **Digital Twin engine:** Maintains versioned clinical state, physiological state, prediction state, and update history in memory.
-4. **ML inference:** Produces an exploratory classification output using clinical features.
-5. **Dashboard and API:** A React dashboard communicates with a FastAPI backend to display state and invoke updates and predictions.
+## 3. Problem Statement and Healthcare Use Case
 
-### Current Data Flow
+Hypertension is an important risk factor for cardiovascular and cerebrovascular disease. Conventional risk assessment may rely on clinical measurements and historical patient information, while physiological measurements can change over time.
+
+TwinPulse explores a software-based approach that combines a patient's clinical state with a changing stream of physiological observations. The intended research use case is a doctor-facing interface that presents a patient's recorded state and an exploratory machine-learning output in one place.
+
+The project investigates whether clinical features, and potentially ECG-derived heart-rate-variability (HRV) features, can support classification experiments using the SHAREE dataset. The current results are preliminary and do not establish clinically useful prediction.
+
+### Project objectives
+
+- Represent selected patient information in a software-based Digital Twin.
+- Accept clinical features for exploratory ML inference.
+- Record simulated physiological observations, including heart-rate and HRV fields, in the Digital Twin state.
+- Display the Digital Twin state and exploratory prediction through a dashboard.
+- Evaluate a clinical-only baseline and a separate preliminary clinical-plus-HRV experiment.
+- Document limitations and results transparently.
+
+### Current implementation boundary
+
+The application uses **simulated physiological observations** to update the Digital Twin state. These observations are **not** currently fed into the deployed prediction model. Real ECG replay and end-to-end HRV integration remain future work.
+
+---
+
+## 4. Proposed Solution and System Workflow
+
+TwinPulse consists of a frontend dashboard, backend API, Digital Twin state engine, and machine-learning inference interface.
 
 ```text
 Clinical Patient Features
           |
           v
-   FastAPI Backend
+   React + TypeScript Dashboard
           |
+          | HTTP / REST
           v
- Clinical ML Inference ------> Exploratory Prediction
-          |                            |
-          +-------------+--------------+
-                        v
-                Digital Twin State
-                        ^
-                        |
-             Simulated Physiological
-                   Observations
-                        |
-                        v
-                React Dashboard
+      FastAPI Backend
+          |
+          +----------------------+
+          |                      |
+          v                      v
+ Clinical ML Inference     Digital Twin Engine
+          |                - Clinical state
+          v                - Simulated physiological
+ Exploratory Prediction      observations
+                             - State version/history
+          ^                      ^
+          |                      |
+          +----------------------+
 ```
 
-**Implementation boundary:** The current dashboard does not replay real ECG recordings. Simulated physiological observations update the Digital Twin but are not fed into the deployed prediction model. Real ECG replay and end-to-end HRV integration remain future work.
+### Workflow
+
+1. The dashboard sends clinical features to the backend.
+2. The inference interface produces an exploratory prediction using clinical features.
+3. The Digital Twin records clinical state, simulated physiological observations, prediction state, and update history.
+4. The dashboard displays the current state and prediction output.
+
+**Important:** This workflow demonstrates software integration, not a clinically validated monitoring or risk-prediction system. Digital Twin state is currently stored in memory and may not persist after a backend restart.
 
 ---
 
-## Primary Dataset
+## 5. Dataset
 
 ### SHAREE — Smart Health for Assessing the Risk of Events via ECG
 
-TwinPulse uses the SHAREE dataset from PhysioNet for its exploratory clinical and physiological data experiments.
+TwinPulse uses the **SHAREE dataset from PhysioNet** for exploratory clinical and physiological data experiments.
 
-The available dataset information includes:
+Available dataset information includes:
 
 - Demographic and clinical information for hypertensive patients
 - Ambulatory ECG recordings
@@ -78,363 +104,175 @@ The available dataset information includes:
 - Blood-pressure and other clinical measurements
 - Recorded vascular-event labels
 
-### Data Availability and Quality
+### Data availability and quality
 
-The initial clinical cohort contains 139 patients, including 17 positive vascular-event labels and 122 patients without a recorded event label. ECG signal files have been available for only a subset of the cohort in the current working dataset.
+- The initial clinical cohort contains **139 patients**.
+- There are **17 positive vascular-event labels** and **122 patients without a recorded event label** in the current cohort.
+- ECG signal files are available for only a subset of the cohort in the current working dataset.
+- The preliminary clinical-plus-HRV experiment uses **25 patients** with available ECG signals and extracted features.
+- QRS annotations and derived RR intervals may contain errors, so HRV features require cautious interpretation.
 
-The preliminary clinical-plus-HRV experiment uses 25 patients with available ECG signals and extracted features. QRS annotations and derived RR intervals may contain errors, so the resulting HRV features require cautious interpretation.
-
-The dataset's outcome encoding and prediction horizon must be interpreted according to the original dataset documentation. The project does not assume that the current experiments establish a validated 12-month individual-risk prediction task.
+The dataset's outcome encoding and prediction horizon must be interpreted according to the original dataset documentation. The current experiments do not establish a validated 12-month individual-risk prediction task.
 
 Raw dataset files are not committed to this repository. Dataset licensing, attribution, and access conditions must be respected.
 
 ---
 
-## Prediction Objective
+## 6. AI/ML Models and Frameworks
 
-TwinPulse explores machine-learning approaches for identifying cardiovascular and cerebrovascular event labels in the SHAREE dataset.
+### Implemented model
 
-The initial clinical baseline uses demographic and clinical features. A separate preliminary experiment compares clinical-only features with clinical features augmented by ECG-derived heart rate variability (HRV) features.
+The current baseline uses **Logistic Regression with class weighting** for an exploratory classification task based on clinical features.
 
-The deployed inference interface currently uses clinical features only. The HRV experiment is exploratory and does not establish that physiological features improve prediction.
-
-The exact prediction horizon and target definition must follow the original dataset's outcome documentation. The current experiments should not be interpreted as validated predictions of an individual patient's 12-month cardiovascular risk.
-
-**Important:** TwinPulse is a research and educational proof-of-concept, not a clinically validated diagnostic or risk-assessment system.
-
----
-
-## Digital Twin Concept
-
-TwinPulse implements a software-based representation of a patient's state. The current Digital Twin engine maintains versioned state updates in memory.
-
-### State Maintained
-
-- Patient identifier
-- Clinical state
-- Physiological observations
-- Latest prediction output
-- State version and update timestamp
-- History of state updates
-
-### Current State Flow
-
-```text
-Clinical Features
-       |
-       v
-Digital Twin State <--- Simulated Physiological Observations
-       |
-       v
-Clinical-Only ML Inference
-       |
-       v
-Exploratory Prediction
-       |
-       v
-Updated Digital Twin State
-```
-
-The Digital Twin engine and ML inference interface are separate components. The current application records simulated physiological observations, but those observations are not used by the deployed model to calculate predictions.
-
-**Implementation limitation:** State is stored in memory and is not guaranteed to persist after a backend restart. A validated physiological risk trajectory and real-time ECG-driven updates are not yet implemented.
-
----
-
-## Machine Learning
-
-TwinPulse uses a research-oriented machine-learning pipeline to investigate cardiovascular and cerebrovascular event classification using the SHAREE dataset.
-
-### Models and Experiments
-
-The implemented baseline uses **Logistic Regression with class weighting**. Preliminary experiments compare:
+The experiments compare:
 
 1. **Clinical-only baseline:** demographic and clinical features.
-2. **Clinical + HRV baseline:** clinical features augmented with ECG-derived heart rate variability features.
+2. **Clinical-plus-HRV baseline:** clinical features augmented with ECG-derived heart-rate-variability features.
 
-The clinical-only model uses a larger clinical cohort, while the combined-feature experiment is restricted to patients with available ECG signal files and usable extracted features.
+The clinical-only experiment uses a larger cohort, while the combined-feature experiment is restricted to patients with available ECG signals and usable extracted features.
 
-### Preliminary Evaluation
+### Preliminary evaluation
 
-The initial clinical-only experiment on 139 patients showed weak discrimination, with a five-fold stratified out-of-fold ROC-AUC of approximately 0.46.
+- The clinical-only experiment on 139 patients produced a five-fold stratified out-of-fold **ROC-AUC of approximately 0.46**.
+- In a separate 25-patient experiment, ROC-AUC was approximately **0.41** for clinical-only features and **0.42** for clinical-plus-HRV features.
+- The HRV-augmented experiment did not improve the reported precision, recall, F1-score, or average precision.
 
-The separate 25-patient experiment produced ROC-AUC values of approximately 0.41 for clinical-only features and 0.42 for clinical-plus-HRV features. The HRV-augmented experiment did not improve the reported precision, recall, F1-score, or average precision.
+These results are weak and preliminary. Small sample size, class imbalance, signal-quality concerns, and uncertain outcome semantics limit interpretation. They are **not evidence of clinically useful prediction**.
 
-These results are preliminary and are not evidence of clinically useful prediction. The small sample, class imbalance, signal-quality concerns, and uncertain outcome semantics limit interpretation.
+### Feature engineering explored
 
-### Feature Engineering
-
-Potential features include:
+Depending on record availability and data quality, candidate features include:
 
 - Age and sex
 - Body mass index
 - Systolic and diastolic blood pressure
-- Available clinical measurements
+- Other available clinical measurements
 - ECG-derived mean heart rate and RR intervals
 - HRV measures such as SDNN, RMSSD, and pNN50
 
-Feature availability and quality depend on the dataset records. The deployed inference interface currently accepts clinical features only; HRV features are not yet integrated into deployed predictions.
+The deployed inference interface currently uses clinical features only; HRV features are not integrated into deployed predictions.
 
-### Evaluation Principles
+### Explainability
 
-- Report class imbalance and sample size alongside metrics.
-- Fit preprocessing within each training fold.
-- Avoid claims of clinical validity or generalization from preliminary experiments.
-- Treat signal-derived features cautiously because the available QRS annotations have not been fully validated.
+Logistic Regression coefficients may help describe how input features influence the model's decision function. Coefficients alone do not establish causation or clinical importance. SHAP or other explanation methods may be investigated if appropriate for the final model and dataset. A validated, patient-specific explainability interface has not yet been established.
 
 ---
 
-## Explainability
+## 7. Technical Stack
 
-TwinPulse prioritizes transparent reporting of its machine-learning experiments.
-
-### Current Status
-
-The current baseline uses Logistic Regression, whose fitted coefficients can help describe how input features influence the model's decision function. However, coefficients alone do not establish causation or clinical importance.
-
-### Planned Improvements
-
-- Report model coefficients with feature names and preprocessing details.
-- Investigate SHAP or other suitable explainability techniques if justified by the final model and dataset.
-- Present feature contributions only after verifying that the explanation method is appropriate.
-- Clearly distinguish model explanations from medical conclusions.
-
-**Current limitation:** A validated, patient-specific explainability interface has not yet been established. TwinPulse does not claim that its current dashboard provides clinically validated explanations for cardiovascular events.
+| Layer | Technologies |
+|---|---|
+| Frontend | React, TypeScript, Vite, Lucide icons |
+| Backend API | FastAPI, Uvicorn, Pydantic |
+| Machine learning | Python, scikit-learn, Logistic Regression, Joblib |
+| Data processing | Pandas, NumPy |
+| Physiological signal experiments | ECG/QRS annotation inspection, RR interval and HRV feature experiments |
+| Digital Twin | Custom Python state engine with versioned state updates and update history |
+| Testing | Python `unittest` for the API health check |
+| Development tools | Git, GitHub, Visual Studio Code, Python virtual environment |
 
 ---
 
-## System Architecture
+## 8. Architecture Diagram
 
-TwinPulse consists of a React frontend, FastAPI backend, Digital Twin state engine, and a clinical-feature-based ML inference interface.
+The architecture documentation is included in the repository:
 
-### Implemented Architecture
+- **Architecture diagram (PDF):** [`docs/architecture/TwinPulse_Architecture_Diagram.pdf`](docs/architecture/TwinPulse_Architecture_Diagram.pdf)
+- **Architecture notes:** [`docs/architecture/ARCHITECTURE.md`](docs/architecture/ARCHITECTURE.md)
 
-```text
-+-----------------------------+
-| React + TypeScript Dashboard|
-+--------------+--------------+
-               |
-               | HTTP / REST
-               v
-+-----------------------------+
-| FastAPI Backend             |
-| Health / Prediction / Twin  |
-| State Update Endpoints      |
-+---------+-------------+-----+
-          |             |
-          v             v
-+----------------+  +----------------------+
-| Clinical ML    |  | Digital Twin Engine  |
-| Inference      |  | Versioned State      |
-|                |  | Update History       |
-+-------+--------+  +----------+-----------+
-        |                      ^
-        | Prediction           |
-        +----------------------+
-                               |
-                  Simulated Physiological
-                        Observations
-```
-
-### Current Data Flow
-
-1. The dashboard sends clinical features to the backend.
-2. The inference interface produces an exploratory prediction from clinical features.
-3. The Digital Twin records clinical state, simulated physiological observations, prediction state, and update history.
-4. The dashboard displays the current state and prediction output.
-
-### Not Yet Integrated
-
-- Sequential replay of real ECG recordings through the application.
-- Feeding verified ECG-derived HRV features into deployed predictions.
-- Clinically validated risk calibration or patient-specific explanations.
-- Persistent storage of Digital Twin state across backend restarts.
-
-The architecture describes a working research proof-of-concept. It does not represent a clinically validated monitoring or prediction system.
+The architecture describes the React dashboard, FastAPI backend, clinical-feature-based inference interface, and Digital Twin state engine. It also identifies the current boundary between simulated physiological observations and ML inference.
 
 ---
 
-## Technology Stack
+## 9. Presentation and Demonstration Video
 
-### Machine Learning and Data Processing
+- **Project presentation (PowerPoint):** [`docs/presentation/TwinPulse_Digital_Twin_Challenge_2026_By_Happiest_Health.pptx`](docs/presentation/TwinPulse_Digital_Twin_Challenge_2026_By_Happiest_Health.pptx)
+- **Demonstration video (Google Drive):** [Watch the TwinPulse demonstration video](https://drive.google.com/file/d/19Lr3cA2bog7CS9aQbIdosBuhCoh-k9ho/view?usp=sharing)
+- **Video file in repository, if preferred:** [`docs/video/TwinPulse.mp4`](docs/video/TwinPulse.mp4)
 
-- Python
-- Pandas
-- NumPy
-- Scikit-learn
-- Joblib
-- ECG/HRV feature extraction experiments
-
-### Backend
-
-- FastAPI
-- Uvicorn
-- Pydantic
-- Python-based ML inference interface
-- REST API endpoints for health checks, predictions, and Digital Twin state updates
-
-### Frontend
-
-- React
-- TypeScript
-- Vite
-- Lucide icons
-
-### Digital Twin
-
-- Custom Python Digital Twin state engine
-- Versioned patient-state updates
-- Clinical state, physiological observations, prediction state, and event history
-- In-memory state storage for the current proof-of-concept
-
-### Development and Testing
-
-- Git and GitHub
-- Visual Studio Code
-- Python virtual environment
-- Python `unittest` for the API health check
+The demonstration video is intended to explain the problem, project architecture, implementation, and prototype workflow. The submission video should be at least **20 minutes** long, as required by the challenge guidelines.
 
 ---
 
-## Repository Structure
+## 10. Repository Structure
 
 ```text
 TwinPulse/
-|
-|-- backend/
-|
-|-- data/
-|   `-- README.md
-|
-|-- digital-twin/
-|
-|-- docs/
-|   |-- architecture/
-|   |-- presentation/
-|   `-- video/
-|
-|-- frontend/
-|
-|-- ml/
-|   |-- experiments/
-|   |-- models/
-|   |-- notebooks/
-|   |-- src/
-|   `-- README.md
-|
-|-- tests/
-|
-|-- .env.example
-|-- .gitignore
-|-- DECISIONS.md
-|-- LICENSE
-|-- README.md
-`-- ROADMAP.md
+├── backend/
+├── data/
+│   └── README.md
+├── digital-twin/
+├── docs/
+│   ├── architecture/
+│   ├── presentation/
+│   └── video/
+├── frontend/
+├── ml/
+│   ├── experiments/
+│   ├── models/
+│   ├── notebooks/
+│   ├── src/
+│   └── README.md
+├── tests/
+├── .env.example
+├── .gitignore
+├── DECISIONS.md
+├── LICENSE
+├── README.md
+└── ROADMAP.md
 ```
 
-Raw SHAREE dataset files are not committed to the repository. The `docs/presentation/` and `docs/video/` directories are reserved for competition deliverables.
+Raw SHAREE dataset files are not committed to the repository.
 
 ---
 
-## Competition Requirements Mapping
-
-| Competition Requirement | TwinPulse Implementation | Status |
-|---|---|---|
-| Specific chronic condition | Hypertension | Defined |
-| Historical clinical data | SHAREE clinical cohort and clinical-feature experiments | Evaluated experimentally |
-| Dynamic physiological data | Simulated physiological observations update the Digital Twin | Implemented as simulation |
-| Algorithmic model | Logistic Regression baseline and inference interface | Implemented; preliminary performance is weak |
-| Adverse health outcome | SHAREE vascular-event labels | Target semantics require careful interpretation |
-| Digital Twin | Versioned patient state and update history | Implemented in memory |
-| Doctor-facing interaction | React dashboard connected to FastAPI | Implemented as proof-of-concept |
-| Explainability | Logistic Regression coefficients can be investigated | Further work required |
-| Public GitHub repository | TwinPulse repository | Available |
-| Architecture documentation | `docs/architecture/ARCHITECTURE.md` | Available |
-| Competition presentation | `docs/presentation/TwinPulse_Digital_Twin_Challenge_2026_By_Happiest_Health.pptx` | Available |
-| Demonstration video | `docs/video/TwinPulse.mp4` | Available |
-| Architecture pdf | `docs/architecture/TwinPulse_Architecture_Diagram.pdf` | Available |
-
-The current implementation demonstrates the software workflow, not a clinically validated cardiovascular risk prediction system. Real ECG replay, deployed HRV fusion, external validation, and clinical validation remain incomplete.
-
----
-
-## Project Status
-
-**Current phase:** Working research proof-of-concept
+## 11. Project Status and Limitations
 
 ### Implemented
 
-- FastAPI backend with health and prediction endpoints.
-- React + TypeScript dashboard.
-- Digital Twin state management with versioned state history.
-- Clinical-feature-based ML inference interface.
-- Simulated physiological observations, including heart rate and HRV fields.
-- Preliminary clinical-only and clinical-plus-HRV baseline experiments.
-- Architecture documentation and an automated API health test.
+- FastAPI backend with health and prediction endpoints
+- React + TypeScript dashboard
+- Digital Twin state management with versioned state history
+- Clinical-feature-based ML inference interface
+- Simulated physiological observations, including heart-rate and HRV fields
+- Preliminary clinical-only and clinical-plus-HRV baseline experiments
+- Architecture documentation and an automated API health test
 
-### Current Limitations
+### Current limitations
 
 - The deployed prediction model uses clinical features only.
 - Simulated physiological observations update the Digital Twin state but are not used by the deployed model to calculate predictions.
 - Real ECG replay and end-to-end HRV integration remain incomplete.
-- Preliminary evaluation results are limited by the small number of patients with available ECG signal files and the dataset's class imbalance.
+- Preliminary evaluation is limited by class imbalance and the small number of patients with available ECG signal files.
 - The model is not clinically validated, and its output must not be interpreted as an individual's clinical risk estimate.
+- Persistent storage of Digital Twin state across backend restarts is not implemented.
 
-### Next Priorities
-
-1. Finalize dataset and evaluation documentation.
-2. Verify the reproducibility of the ML experiments and API.
-3. Complete the competition presentation and demonstration video.
-4. Document the implemented functionality and remaining limitations accurately.
-
-
-## Important Limitations
-
-TwinPulse is a research and educational proof-of-concept.
-
-The project does **not** claim:
-
-- Clinical validation
-- Medical diagnosis
-- Treatment recommendations
-- Guaranteed event prediction
-- Real-time clinical monitoring
-- Generalization to the entire population
-- Replacement of medical professionals
-
-The model's performance will be reported honestly using appropriate evaluation metrics and patient-level validation.
+TwinPulse does not claim clinical validation, medical diagnosis, treatment recommendations, guaranteed event prediction, real-time clinical monitoring, population-wide generalization, or replacement of medical professionals.
 
 ---
 
-## Team
+## 12. Open-Source License
 
-**Team Name:** TwinPulse
+TwinPulse is released under the **MIT License**. See the [`LICENSE`](LICENSE) file for the complete license text.
 
-TwinPulse was developed for the **Digital Twin Challenge 2026 by Happiest Health**.
-
-### Team Members and Institutions
-
-1. Almas Banu - Sri Venkateshwara College of Engineering (SVCE), Bengaluru
-
-2. Ansu Kumar - GITAM Deemed to be University, Bengaluru
-
-** Repository:** [AlmasBanu1/TwinPulse](https://github.com/AlmasBanu1/TwinPulse)
-
+Dataset licensing, attribution, and access requirements are separate from the software license and must be respected according to the original dataset provider's terms.
 
 ---
 
-## Competition Deliverables
+## 13. Competition Submission Checklist
 
-- Architecture Diagram: [TwinPulse Architecture PDF](docs/architecture/TwinPulse_Architecture_Diagram.pdf)
-
-- Project Presentation: [TwinPulse Presentation](docs/presentation/TwinPulse_Digital_Twin_Challenge_2026_By_Happiest_Health.pptx)
-
-- Demonstration Video: https://drive.google.com/file/d/19Lr3cA2bog7CS9aQbIdosBuhCoh-k9ho/view?usp=sharing
+| Submission requirement | Included in repository |
+|---|---|
+| Team details and institution information | Listed in this README |
+| Project title | Listed in this README |
+| Problem statement and healthcare use case | Listed in this README |
+| Technical stack and AI/ML model details | Listed in this README |
+| Minimum 20-minute demonstration video | Linked above; confirm the final video duration meets the requirement |
+| Open-source license | MIT License in `LICENSE` |
+| Architecture diagram in PDF/PPT format | PDF linked above |
+| Project presentation in PDF/PPT format | PowerPoint linked above |
+| Public GitHub repository | [AlmasBanu1/TwinPulse](https://github.com/AlmasBanu1/TwinPulse) |
 
 ---
 
-## License
-
-This project is released under the license included in the repository.
-
-Dataset licensing and attribution will be respected separately according to the original dataset provider's terms.
+*TwinPulse is a research and educational proof-of-concept. All experimental results and implementation limitations are reported transparently; the system is not intended for clinical use.*
